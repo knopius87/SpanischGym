@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071418">
+  <meta name="description" content="Spanish Gym – Testgenerator und eigene Lernlisten für Lehrkräfte.">
+  <title>Spanish Gym · Lehrkraft</title>
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png">
+  <style>
+    :root { --ink:#f7fbfa; --muted:#a8bbb9; --night:#071418; --panel:#0c2429; --panel2:#123139; --line:rgba(181,231,226,.17); --teal:#1dc6b3; --sun:#ffb23e; --orange:#ff713d; --red:#ff6680; --ui:"Avenir Next","Segoe UI",system-ui,sans-serif; --display:"Trebuchet MS","Avenir Next","Segoe UI",system-ui,sans-serif; }
+    * { box-sizing:border-box; }
+    [hidden] { display:none!important; }
+    body { margin:0; min-height:100vh; color:var(--ink); background:radial-gradient(circle at 88% -8%,rgba(255,113,61,.24),transparent 32rem),radial-gradient(circle at 4% 18%,rgba(29,198,179,.17),transparent 30rem),linear-gradient(155deg,#061115,#0a1e22 62%,#071418); font:16px/1.45 var(--ui); }
+    button,input,select,textarea { font:inherit; }
+    button { cursor:pointer; touch-action:manipulation; }
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible { outline:3px solid var(--sun); outline-offset:2px; }
+    a { color:var(--teal); }
+    h1,h2,h3,p { margin-top:0; }
+    h1,h2,h3 { font-family:var(--display); letter-spacing:-.025em; }
+    .app { width:min(1380px,100%); margin:auto; padding:16px clamp(12px,2.5vw,28px) 50px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:950; letter-spacing:-.04em; font-size:clamp(1.45rem,3vw,2.1rem); }
+    .brandMark { width:42px; aspect-ratio:1; display:grid; place-items:center; border-radius:14px; color:#10211f; background:linear-gradient(135deg,var(--teal),var(--sun)); }
+    .brand em { color:var(--sun); font-style:normal; }
+    .kicker { color:var(--sun); font-size:.72rem; font-weight:900; letter-spacing:.13em; text-transform:uppercase; }
+    .muted,.hint { color:var(--muted); }
+    .hint { font-size:.8rem; }
+    .layout { display:grid; grid-template-columns:minmax(340px,.78fr) minmax(520px,1.22fr); gap:14px; align-items:start; }
+    .stack { display:grid; gap:12px; }
+    .card,.previewPanel { border:1px solid var(--line); border-radius:22px; background:linear-gradient(145deg,rgba(18,49,57,.96),rgba(8,25,29,.97)); box-shadow:0 22px 64px rgba(0,0,0,.27); }
+    .card { padding:18px; }
+    .card h2 { margin-bottom:6px; }
+    .formGrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .field { display:grid; gap:5px; }
+    .field.full { grid-column:1/-1; }
+    label { font-weight:850; font-size:.86rem; }
+    input,select,textarea { width:100%; border:1px solid var(--line); border-radius:12px; padding:10px 11px; color:var(--ink); background:#102f36; }
+    textarea { min-height:150px; resize:vertical; }
+    .primary,.secondary,.ghost,.danger { min-height:44px; border:0; border-radius:13px; padding:10px 14px; color:var(--ink); font-weight:900; }
+    .primary { color:#13221e; background:linear-gradient(135deg,var(--orange),var(--sun)); }
+    .secondary,.ghost { border:1px solid var(--line); background:#123139; }
+    .danger { border:1px solid rgba(255,102,128,.35); background:rgba(255,102,128,.08); color:#ff9bad; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .topicPicker { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; max-height:245px; overflow:auto; margin-top:10px; padding-right:4px; }
+    .topicPick { position:relative; display:block; min-height:68px; border:1px solid var(--line); border-radius:13px; padding:10px 38px 10px 10px; background:rgba(255,255,255,.035); cursor:pointer; }
+    .topicPick:has(input:checked) { border-color:var(--teal); background:rgba(29,198,179,.1); }
+    .topicPick input { position:absolute; width:20px; height:20px; right:9px; top:9px; accent-color:var(--teal); }
+    .topicPick b,.topicPick span { display:block; }
+    .topicPick span { color:var(--muted); font-size:.72rem; }
+    .listCards { display:grid; gap:7px; margin-top:10px; }
+    .listCard { display:flex; align-items:center; justify-content:space-between; gap:9px; padding:10px; border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.035); }
+    .listCard h3 { margin:0 0 2px; font-size:1rem; }
+    .listCard .actions { margin:0; flex-wrap:nowrap; }
+    .status { min-height:1.3em; margin:9px 0 0; color:var(--teal); font-weight:800; font-size:.8rem; }
+    .previewPanel { position:sticky; top:12px; padding:13px; overflow:auto; }
+    .previewToolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .previewToolbar h2 { margin:0; }
+    .sheet { width:min(100%,210mm); min-height:297mm; margin:auto; padding:13mm; color:#122326; background:white; box-shadow:0 15px 45px rgba(0,0,0,.3); font:11pt/1.35 "Segoe UI",Arial,sans-serif; print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+    .sheet + .sheet { margin-top:15px; }
+    .sheetHeader { display:grid; grid-template-columns:1fr 62mm; min-height:42mm; overflow:hidden; border:2px solid #0d4f52; border-radius:7mm; background:#09282c; color:white; }
+    .sheetHeading { padding:8mm; }
+    .sheetHeading .eyebrow { color:#ffb23e; font-size:9pt; font-weight:900; letter-spacing:.16em; }
+    .sheetHeading h1 { margin:3mm 0 1mm; font-size:24pt; line-height:1; }
+    .sheetHeading p { margin:0; color:#c9e5e2; }
+    .sheetSport { width:100%; height:42mm; object-fit:cover; }
+    .studentLine { display:grid; grid-template-columns:1.5fr .7fr .7fr; gap:7mm; margin:8mm 0 6mm; }
+    .lineField { border-bottom:1.5px solid #516b6c; padding-bottom:2mm; font-size:9pt; color:#516b6c; }
+    .testMeta { display:flex; justify-content:space-between; gap:8px; padding:3mm 4mm; border-radius:3mm; background:#eaf7f5; font-size:9pt; font-weight:750; }
+    .tasks { display:grid; gap:3.2mm; margin-top:6mm; }
+    .task { display:grid; grid-template-columns:8mm minmax(0,1fr) 12mm; gap:3mm; align-items:start; break-inside:avoid; }
+    .taskNo { width:7mm; height:7mm; display:grid; place-items:center; border-radius:2mm; color:white; background:#0d7470; font-weight:900; }
+    .taskPrompt { font-weight:700; }
+    .answerLine { height:8mm; margin-top:1.7mm; border-bottom:1px solid #8ba2a1; }
+    .points { text-align:right; color:#647b7b; font-size:9pt; }
+    .scoreBoard { display:flex; justify-content:flex-end; gap:4mm; margin-top:8mm; }
+    .scoreBox { min-width:27mm; padding:3mm; border:2px solid #ff8b3e; border-radius:3mm; text-align:center; font-weight:900; }
+    .answerKey .task { grid-template-columns:8mm 1fr; }
+    .answerKey .answer { color:#0d7470; font-weight:800; }
+    .emptyPreview { min-height:480px; display:grid; place-items:center; text-align:center; color:var(--muted); }
+    @media(max-width:980px){ .layout{grid-template-columns:1fr}.previewPanel{position:static}.sheet{min-height:auto}.topicPicker{max-height:none} }
+    @media(max-width:620px){ .formGrid,.topicPicker{grid-template-columns:1fr}.topbar{align-items:flex-start}.topbar .secondary{padding:8px}.sheet{padding:8mm;font-size:9.5pt}.sheetHeader{grid-template-columns:1fr 42mm}.sheetSport{height:38mm}.studentLine{gap:3mm}.previewPanel{padding:8px} }
+    @media print {
+      @page { size:A4; margin:0; }
+      body { background:white; }
+      .screenOnly,.stack,.previewToolbar,.topbar { display:none!important; }
+      .app,.layout,.previewPanel { display:block; width:auto; margin:0; padding:0; border:0; background:white; box-shadow:none; }
+      .sheet { width:210mm; min-height:297mm; margin:0; box-shadow:none; page-break-after:always; }
+      .sheet:last-child { page-break-after:auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar screenOnly">
+      <div class="brand"><span class="brandMark">SG</span><span>Spanish <em>Gym</em> · Lehrkraft</span></div>
+      <a class="secondary" href="index.html" style="text-decoration:none;display:grid;place-items:center">Zur Schüler*innen-App</a>
+    </header>
+
+    <div class="layout">
+      <div class="stack screenOnly">
+        <section class="card">
+          <span class="kicker">TESTGENERATOR</span>
+          <h2>Test zusammenstellen</h2>
+          <p class="muted">Wähle Stoff, Umfang und Sportdesign. Das Ergebnis ist direkt druckfertig.</p>
+          <div class="formGrid">
+            <div class="field full"><label for="testTitle">Titel</label><input id="testTitle" value="Vokabel- und Grammatiktest"></div>
+            <div class="field"><label for="testUnit">Lernstand</label><select id="testUnit"><option value="1">Unidad 1</option><option value="2">Unidad 2</option><option value="all">Unidad 1 + 2</option></select></div>
+            <div class="field"><label for="testKind">Bereiche</label><select id="testKind"><option value="all">Wortschatz + Grammatik</option><option value="vocab">Nur Wortschatz</option><option value="grammar">Nur Grammatik</option></select></div>
+            <div class="field"><label for="direction">Wortschatzrichtung</label><select id="direction"><option value="de-es">Deutsch → Spanisch</option><option value="es-de">Spanisch → Deutsch</option><option value="mixed">Gemischt</option></select></div>
+            <div class="field"><label for="questionCount">Aufgaben</label><input id="questionCount" type="number" min="4" max="36" value="16"></div>
+            <div class="field"><label for="testSport">Sportdesign</label><select id="testSport"></select></div>
+            <div class="field" style="align-content:end"><label><input id="includeKey" type="checkbox" checked style="width:auto"> Lösungsschlüssel anhängen</label></div>
+          </div>
+          <div class="actions"><button id="allTopics" class="secondary" type="button">Alle wählen</button><button id="noTopics" class="secondary" type="button">Auswahl löschen</button></div>
+          <div id="topicPicker" class="topicPicker"></div>
+          <p id="generatorStatus" class="status" role="status"></p>
+          <div class="actions"><button id="generateTest" class="primary" type="button">Test neu erzeugen</button><button id="printTest" class="secondary" type="button">Drucken / PDF</button></div>
+        </section>
+
+        <section class="card">
+          <span class="kicker">EIGENER WORTSCHATZ</span>
+          <h2>Listen ergänzen</h2>
+          <p class="muted">Eine Zeile pro Eintrag, getrennt durch Semikolon oder Tabulator. Beispiel: <b>la mochila; der Rucksack</b></p>
+          <div class="formGrid">
+            <div class="field"><label for="listName">Listenname</label><input id="listName" placeholder="Zum Beispiel: En el instituto"></div>
+            <div class="field"><label for="listUnit">Zuordnung</label><select id="listUnit"><option value="1">Unidad 1</option><option value="2">Unidad 2</option></select></div>
+            <div class="field full"><label for="listEntries">Spanisch ; Deutsch</label><textarea id="listEntries" placeholder="la mochila; der Rucksack&#10;el recreo; die Pause"></textarea></div>
+          </div>
+          <div class="actions"><button id="saveList" class="primary" type="button">Liste speichern</button><button id="clearList" class="secondary" type="button">Eingabe leeren</button></div>
+          <p id="listStatus" class="status" role="status"></p>
+          <div id="listCards" class="listCards"></div>
+          <div class="actions"><button id="exportPack" class="secondary" type="button">Lernpaket für SuS herunterladen</button><button id="importPack" class="secondary" type="button">Lernpaket laden</button><input id="packFile" type="file" accept="application/json,.json" hidden></div>
+          <p class="hint">Gespeicherte Listen stehen auf demselben Gerät sofort auch in der Schüler*innen-App bereit. Für andere Geräte wird die heruntergeladene JSON-Datei verteilt und dort über „Eigene Listen“ importiert.</p>
+        </section>
+      </div>
+
+      <section class="previewPanel">
+        <div class="previewToolbar screenOnly"><div><span class="kicker">DRUCKVORSCHAU</span><h2>Arbeitsblatt</h2></div><button id="shuffleAgain" class="secondary" type="button">Neu mischen</button></div>
+        <div id="printArea"><div class="emptyPreview"><div><h2>Noch kein Test erzeugt</h2><p>Wähle links die gewünschten Bereiche und klicke auf „Test neu erzeugen“.</p></div></div></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/content.js"></script>
+  <script>
+  (() => {
+    "use strict";
+    const DATA = window.SPANISH_GYM_CONTENT;
+    const LIST_KEY = "SPANISH_GYM_CUSTOM_LISTS";
+    const $ = id => document.getElementById(id);
+    const qa = selector => Array.from(document.querySelectorAll(selector));
+    const SPORTS = [
+      ["football","Fútbol","⚽"],["basketball","Baloncesto","🏀"],["beach-volleyball","Vóley playa","🏐"],["athletics","Atletismo","🏃"],
+      ["padel","Pádel","🎾"],["skate","Skate","🛹"],["swimming","Natación","🏊"],["mtb","Ciclismo MTB","🚵"]
+    ].map(([id,name,icon]) => ({id,name,icon}));
+    let lists = loadLists();
+    let editingId = null;
+    let lastQuestions = [];
+
+    function esc(value) { return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]); }
+    function shuffle(items) { const array=items.slice(); for(let i=array.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]];} return array; }
+    function cleanLists(value) {
+      if(!Array.isArray(value)) return [];
+      return value.map((list,index)=>({id:String(list.id||`list-${Date.now()}-${index}`),name:String(list.name||"Eigene Liste").slice(0,80),unit:["1","2"].includes(String(list.unit))?String(list.unit):"1",items:Array.isArray(list.items)?list.items.filter(item=>Array.isArray(item)&&String(item[0]||"").trim()&&String(item[1]||"").trim()).slice(0,250).map(item=>[String(item[0]).trim(),String(item[1]).trim(),"custom"]):[]})).filter(list=>list.items.length);
+    }
+    function loadLists(){ try{return cleanLists(JSON.parse(localStorage.getItem(LIST_KEY)||"[]"));}catch(error){return [];} }
+    function saveLists(){ localStorage.setItem(LIST_KEY,JSON.stringify(lists)); renderLists(); renderTopics(); }
+    function mergeLists(incoming){const map=new Map(lists.map(list=>[list.id,list]));cleanLists(incoming).forEach(list=>map.set(list.id,list));lists=[...map.values()];saveLists();}
+    function downloadJSON(filename,value){const blob=new Blob([JSON.stringify(value,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const link=document.createElement("a");link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+
+    function allTopics(){
+      const result=[];
+      for(const unit of ["1","2"]){Object.entries(DATA[unit].vocab).forEach(([name,items])=>result.push({key:`${unit}|vocab|${name}`,unit,type:"vocab",name,items:items.filter(item=>item[2]!=="receptive")}));Object.entries(DATA[unit].grammar).forEach(([name,items])=>result.push({key:`${unit}|grammar|${name}`,unit,type:"grammar",name,items}));}
+      lists.forEach(list=>result.push({key:`${list.unit}|custom|${list.id}`,unit:list.unit,type:"custom",name:list.name,items:list.items}));
+      return result;
+    }
+    function filteredTopics(){const unit=$("testUnit").value,kind=$("testKind").value;return allTopics().filter(topic=>(unit==="all"||topic.unit===unit)&&(kind==="all"||(kind==="vocab"?topic.type!=="grammar":topic.type==="grammar")));}
+    function renderTopics(){const previous=new Set(qa(".topicCheck:checked").map(input=>input.value));const topics=filteredTopics();$("topicPicker").innerHTML=topics.map(topic=>`<label class="topicPick"><input class="topicCheck" type="checkbox" value="${esc(topic.key)}" ${previous.size===0||previous.has(topic.key)?"checked":""}><b>${esc(topic.name)}</b><span>U${topic.unit} · ${topic.type==="grammar"?"Grammatik":topic.type==="custom"?"Eigene Liste":"Wortschatz"} · ${topic.items.length}</span></label>`).join("");}
+
+    function buildQuestions(){
+      const selected=new Set(qa(".topicCheck:checked").map(input=>input.value));const direction=$("direction").value;let pool=[];
+      allTopics().filter(topic=>selected.has(topic.key)).forEach(topic=>topic.items.forEach(item=>{if(topic.type==="grammar")pool.push({prompt:item[0],answer:item[1],topic:topic.name,unit:topic.unit});else{let mode=direction;if(mode==="mixed")mode=Math.random()<.5?"de-es":"es-de";pool.push({prompt:mode==="de-es"?item[1]:item[0],answer:mode==="de-es"?item[0]:item[1],topic:topic.name,unit:topic.unit});}}));
+      const count=Math.max(4,Math.min(36,Number($("questionCount").value)||16));return shuffle(pool).slice(0,Math.min(count,pool.length));
+    }
+    function renderTest(questions){
+      if(!questions.length){$("generatorStatus").textContent="Wähle mindestens einen Bereich mit Inhalten.";return;}
+      const sport=SPORTS.find(item=>item.id===$("testSport").value)||SPORTS[0];const title=$("testTitle").value.trim()||"Spanischtest";const unit=$("testUnit").value==="all"?"Unidad 1 + 2":`Unidad ${$("testUnit").value}`;
+      const tasks=questions.map((question,index)=>`<div class="task"><div class="taskNo">${index+1}</div><div><div class="taskPrompt">${esc(question.prompt)}</div><div class="answerLine"></div></div><div class="points">/ 1 P</div></div>`).join("");
+      const key=questions.map((question,index)=>`<div class="task"><div class="taskNo">${index+1}</div><div><div>${esc(question.prompt)}</div><div class="answer">${esc(question.answer)}</div></div></div>`).join("");
+      const header=`<div class="sheetHeader"><div class="sheetHeading"><div class="eyebrow">SPANISH GYM · WORKOUT TEST</div><h1>${esc(title)}</h1><p>${esc(unit)} · ${sport.icon} ${esc(sport.name)}</p></div><img class="sheetSport" src="assets/sports/${sport.id}-training.jpg" alt=""></div>`;
+      let html=`<article class="sheet">${header}<div class="studentLine"><div class="lineField">Name</div><div class="lineField">Klasse</div><div class="lineField">Datum</div></div><div class="testMeta"><span>Übersetze bzw. ergänze passend.</span><span>${questions.length} Punkte</span></div><div class="tasks">${tasks}</div><div class="scoreBoard"><div class="scoreBox">Punkte<br>___ / ${questions.length}</div><div class="scoreBox">Note<br>_____</div></div></article>`;
+      if($("includeKey").checked)html+=`<article class="sheet answerKey">${header}<div class="testMeta"><span>Lösungsschlüssel</span><span>${questions.length} Lösungen</span></div><div class="tasks">${key}</div></article>`;
+      $("printArea").innerHTML=html;$("generatorStatus").textContent=`✓ ${questions.length} Aufgaben neu zusammengestellt.`;lastQuestions=questions;
+    }
+
+    function parseEntries(text){return text.split(/\r?\n/).map(line=>{const parts=line.split(/\s*(?:;|\t|\|)\s*/,2);return parts.length===2?[parts[0].trim(),parts[1].trim(),"custom"]:null;}).filter(item=>item&&item[0]&&item[1]);}
+    function renderLists(){$("listCards").innerHTML=lists.length?lists.map(list=>`<article class="listCard"><div><h3>${esc(list.name)}</h3><div class="hint">Unidad ${list.unit} · ${list.items.length} Einträge</div></div><div class="actions"><button class="secondary" data-edit-list="${esc(list.id)}" type="button">Bearbeiten</button><button class="danger" data-delete-list="${esc(list.id)}" type="button">×</button></div></article>`).join(""):'<p class="muted">Noch keine eigenen Listen gespeichert.</p>';}
+    function clearForm(){editingId=null;$("listName").value="";$("listEntries").value="";$("saveList").textContent="Liste speichern";}
+    function saveList(){const name=$("listName").value.trim(),items=parseEntries($("listEntries").value);if(!name||!items.length){$("listStatus").textContent="Bitte Namen und mindestens eine gültige Zeile eingeben.";return;}const list={id:editingId||`list-${Date.now().toString(36)}`,name,unit:$("listUnit").value,items};lists=lists.filter(item=>item.id!==list.id);lists.push(list);saveLists();clearForm();$("listStatus").textContent=`✓ „${name}“ mit ${items.length} Einträgen gespeichert.`;}
+    async function importPack(file){try{const pack=JSON.parse(await file.text());if(pack.type!=="spanish-gym-vocab-pack"||!Array.isArray(pack.lists))throw new Error("Kein gültiges Lernpaket.");mergeLists(pack.lists);$("listStatus").textContent=`✓ ${cleanLists(pack.lists).length} Listen geladen.`;}catch(error){$("listStatus").textContent=`Import nicht möglich: ${error.message}`;}finally{$("packFile").value="";}}
+
+    $("testSport").innerHTML=SPORTS.map(sport=>`<option value="${sport.id}">${sport.icon} ${sport.name}</option>`).join("");
+    ["testUnit","testKind"].forEach(id=>$(id).addEventListener("change",renderTopics));
+    $("allTopics").addEventListener("click",()=>qa(".topicCheck").forEach(input=>{input.checked=true;}));
+    $("noTopics").addEventListener("click",()=>qa(".topicCheck").forEach(input=>{input.checked=false;}));
+    $("generateTest").addEventListener("click",()=>renderTest(buildQuestions()));
+    $("shuffleAgain").addEventListener("click",()=>renderTest(buildQuestions()));
+    $("printTest").addEventListener("click",()=>{if(!lastQuestions.length)renderTest(buildQuestions());if($("printArea").querySelector(".sheet"))window.print();});
+    $("saveList").addEventListener("click",saveList);$("clearList").addEventListener("click",clearForm);
+    $("exportPack").addEventListener("click",()=>{if(!lists.length){$("listStatus").textContent="Speichere zuerst mindestens eine Liste.";return;}downloadJSON("spanish-gym-lernpaket.json",{type:"spanish-gym-vocab-pack",createdAt:new Date().toISOString(),lists});$("listStatus").textContent="✓ Lernpaket heruntergeladen.";});
+    $("importPack").addEventListener("click",()=>$("packFile").click());$("packFile").addEventListener("change",()=>{const file=$("packFile").files?.[0];if(file)void importPack(file);});
+    $("listCards").addEventListener("click",event=>{const edit=event.target.closest("[data-edit-list]"),del=event.target.closest("[data-delete-list]");if(edit){const list=lists.find(item=>item.id===edit.dataset.editList);if(list){editingId=list.id;$("listName").value=list.name;$("listUnit").value=list.unit;$("listEntries").value=list.items.map(item=>`${item[0]}; ${item[1]}`).join("\n");$("saveList").textContent="Änderungen speichern";window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});}}if(del){const list=lists.find(item=>item.id===del.dataset.deleteList);if(list&&confirm(`„${list.name}“ wirklich löschen?`)){lists=lists.filter(item=>item.id!==list.id);saveLists();$("listStatus").textContent="Liste gelöscht.";}}});
+
+    renderLists();renderTopics();renderTest(buildQuestions());
+  })();
+  </script>
+</body>
+</html>
